@@ -9,42 +9,42 @@ COL_WIDTH = 20
 
 
 def _display_header(grades_df: pd.DataFrame, col_width_factor: int):
-    print("\n", ' ' * COL_WIDTH, end="")
+    print("\n", ' ' * (COL_WIDTH // 2), end="")
     for course in grades_df.columns:
         print(f"{course:<{col_width_factor * COL_WIDTH}}", end="")
     print()
 
 
 def _display_count(grades_df: pd.DataFrame, col_width_factor: int):
-    print(f"{'Count':<{COL_WIDTH}}", end=" ")
+    print(f"{'Count':<{COL_WIDTH // 2}}", end=" ")
     for course in grades_df.columns:
         print(f"{ft_count(grades_df[course]):<{col_width_factor * COL_WIDTH}}", end="")
     print()
 
 
 def _display_mean(grades_df: pd.DataFrame, col_width_factor: int):
-    print(f"{'Mean':<{COL_WIDTH}}", end=" ")
+    print(f"{'Mean':<{COL_WIDTH // 2}}", end=" ")
     for course in grades_df.columns:
         print(f"{ft_mean(grades_df[course]):<{col_width_factor * COL_WIDTH}.2f}", end="")
     print()
 
 
 def _display_std(grades_df: pd.DataFrame, col_width_factor: int):
-    print(f"{'Std':<{COL_WIDTH}}", end=" ")
+    print(f"{'Std':<{COL_WIDTH // 2}}", end=" ")
     for course in grades_df.columns:
         print(f"{ft_std(grades_df[course]):<{col_width_factor * COL_WIDTH}.2f}", end="")
     print()
 
 
 def _display_min(grades_df: pd.DataFrame, col_width_factor: int):
-    print(f"{'min':<{COL_WIDTH}}", end=" ")
+    print(f"{'min':<{COL_WIDTH // 2}}", end=" ")
     for course in grades_df.columns:
         print(f"{ft_min(grades_df[course]):<{col_width_factor * COL_WIDTH}.2f}", end="")
     print()
 
 
 def _display_max(grades_df: pd.DataFrame, col_width_factor: int):
-    print(f"{'max':<{COL_WIDTH}}", end=" ")
+    print(f"{'max':<{COL_WIDTH // 2}}", end=" ")
     for course in grades_df.columns:
         print(f"{ft_max(grades_df[course]):<{col_width_factor * COL_WIDTH}.2f}", end="")
     print()
@@ -52,7 +52,7 @@ def _display_max(grades_df: pd.DataFrame, col_width_factor: int):
 
 def _display_percentile(grades_df: pd.DataFrame, percentile: int, col_width_factor: int):
     label = f"{percentile}%"
-    print(f"{label:<{COL_WIDTH}}", end=" ")
+    print(f"{label:<{COL_WIDTH // 2}}", end=" ")
     for course in grades_df.columns:
         print(f"{ft_percentile(grades_df[course], percentile):<{col_width_factor * COL_WIDTH}.2f}", end="")
     print()

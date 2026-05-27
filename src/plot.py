@@ -1,5 +1,6 @@
 import math
 from tkinter import Tk
+from typing import cast, Tuple
 import numpy as np
 from matplotlib import patches, pyplot as plt
 import pandas as pd
@@ -63,5 +64,25 @@ def display_histograms(gryffindor_df: pd.DataFrame, hufflepuff_df: pd.DataFrame,
     plt.show()
 
 
-def display_scatter_plot(dataset_df: pd.DataFrame):
-    pass
+def display_scatter_plot(grades_df: pd.DataFrame):
+    corr_array = np.array(grades_df.corr().abs())
+    np.fill_diagonal(corr_array, 0)
+    corr_array = np.triu(corr_array)
+    corr = pd.DataFrame(corr_array, index=grades_df.columns, columns=grades_df.columns)
+    top_four_correlations = corr.stack().nlargest(4)
+
+    figure, axes = plt.subplots(nrows=2, ncols=2)
+    figure.suptitle("Most correlated features")
+    axes = axes.flatten()
+
+    for index, courses in enumerate(top_four_correlations.index):
+        axes[index].scatter(grades_df[courses[0]], grades_df[courses[1]])
+        axes[index].set_xlabel(courses[0] + "Grades")
+        axes[index].set_ylabel(courses[1] + "Grades")
+
+    plt.tight_layout()
+    plt.show()
+    # course1, course2 = best_corr[0], best_corr[1]
+    # plt.scatter(grades_df[course1], grades_df[course2])
+    # plt.xlabel(course1)
+    # plt.ylabel(course2)

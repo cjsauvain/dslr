@@ -1,32 +1,28 @@
 from matplotlib.axes import Axes
 from matplotlib import pyplot as plt
 import pandas as pd
-from pandas import Series
+from pandas import DataFrame
 from numpy import array, triu, fill_diagonal
+
+
+HOUSE_COLORS = {
+    "Gryffindor": "red",
+    "Hufflepuff": "yellow",
+    "Ravenclaw": "blue",
+    "Slytherin": "green"
+}
 
 
 def build_histogram(
         ax: Axes,
-        course_grades: Series,
+        grades_by_houses_df: dict[str, DataFrame],
         course: str,
-        house_color: str,
-        set_xlabel: bool,
-        set_ylabel: bool
 ):
-
-    ax.hist(course_grades, color=house_color, alpha=0.5)
-
-    ax.set_title(course)
-    if set_xlabel == True:
-        ax.set_xlabel("grades")
-    if set_ylabel == True:
-        ax.set_ylabel("# of students")
-
+    for house, grades in grades_by_houses_df.items():
+        ax.hist(grades[course], color=HOUSE_COLORS[house], alpha=0.5)
+        ax.set_title(course)
 
 def display_scatter_plot(grades_df: pd.DataFrame):
-    ############################################
-    # DROP NA VALUES !!!!!!!!!!!!!!!!!!!!!!!!!!#
-    ############################################
     corr_array = array(grades_df.corr().abs())
     fill_diagonal(corr_array, 0)
     corr_array = triu(corr_array)

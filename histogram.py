@@ -5,6 +5,7 @@ from pandas import DataFrame
 from src.parsing import parse_command_line
 from src.plot import build_histogram
 from matplotlib import patches, pyplot as plt
+from matplotlib.lines import Line2D
 
 
 def _get_grades_by_houses(dataset_df: DataFrame) -> dict[str, DataFrame]:
@@ -18,18 +19,33 @@ def _get_grades_by_houses(dataset_df: DataFrame) -> dict[str, DataFrame]:
     }
 
 
-def _set_figure_and_axes(nb_courses: int, nb_columns: int = 5) -> tuple[ndarray, int]:
+def _set_figure_and_axes(nb_courses: int, nb_columns: int = 5) -> ndarray:
     nb_rows = math.ceil(nb_courses / nb_columns)
 
     figure, axes = plt.subplots(nrows=nb_rows, ncols=nb_columns)
     figure.suptitle("Hogwarts Grade Distribution by Course")
-    handles = [
+    house_colors_handles = [
         patches.Patch(color="red", label="Gryffindor", alpha=0.5),
         patches.Patch(color="yellow", label="Hufflepuff", alpha=0.5),
         patches.Patch(color="blue", label="Ravenclaw", alpha=0.5),
         patches.Patch(color="green", label="Slytherin", alpha=0.5)
     ]
-    figure.legend(handles=handles, loc="lower right", fontsize=18)
+    ax_labels_handles = [
+        Line2D([], [], color="none", label="X: Grades"),
+        Line2D([], [], color="none", label="Y: # of students"),
+    ]
+    figure.legend(
+        handles=house_colors_handles,
+        bbox_to_anchor=(0.94, 0.21),
+        fontsize=18
+    )
+    figure.legend(
+        handles=ax_labels_handles,
+        handlelength=0,
+        handletextpad=0,
+        bbox_to_anchor=(0.81, 0.135),
+        fontsize=18
+    )
     axes = axes.flatten()
 
     screen_resolution = Tk()
@@ -40,39 +56,17 @@ def _set_figure_and_axes(nb_courses: int, nb_columns: int = 5) -> tuple[ndarray,
     figure.set_figheight((screen_height * 0.90) / dpi)
     screen_resolution.destroy()
 
-    return axes, nb_columns
+    return axes
 
 
 def _loop_over_courses(dataset_df: DataFrame):
-    houses_colors = {
-        "Gryffindor": "red",
-        "Hufflepuff": "yellow",
-        "Ravenclaw": "blue",
-        "Slytherin": "green"
-    }
     grades_df = dataset_df.select_dtypes("number").drop(columns="Index", errors="ignore")
     grades_by_houses_df = _get_grades_by_houses(dataset_df)
+
     nb_courses = len(grades_df.columns)
-    axes, nb_columns = _set_figure_and_axes(nb_courses)
-
-    last_row = (nb_courses // nb_columns) + 1
-    last_row_start = (last_row - 1) * nb_columns
-    nb_axes_last_row = nb_courses % nb_columns
-    above_empty_axes_start = (last_row - 2) * nb_columns + nb_axes_last_row
-    above_empty_axes_end = (last_row - 1) * nb_columns
+    axes = _set_figure_and_axes(nb_courses)
     for index, course in enumerate(grades_df.columns):
-
-        is_on_last_row = index >= last_row_start
-
-        for house, grades in grades_by_houses_df.items():
-            if nb_courses % nb_columns == 0:
-                is_above_empty_axes = False
-            else:
-                is_above_empty_axes =  above_empty_axes_start <= index <= above_empty_axes_end
-            set_xlabel = is_on_last_row or is_above_empty_axes
-            set_ylabel = index % nb_columns == 0
-
-            build_histogram(axes[index], grades[course], course, houses_colors[house], set_xlabel, set_ylabel)
+        build_histogram(axes[index], grades_by_houses_df, course)
 
     for i in range(nb_courses, len(axes)):
         axes[i].set_visible(False)

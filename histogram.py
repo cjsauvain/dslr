@@ -1,7 +1,7 @@
 import pandas as pd
 
 from src.parsing import parse_command_line
-from visualization import display_histograms
+from src.visualization import display_histograms
 
 
 def histogram():

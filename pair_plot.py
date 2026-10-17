@@ -2,7 +2,7 @@ import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 
 from src.parsing import parse_command_line
-from visualization import display_histograms, display_scatter_plots
+from src.visualization import display_histograms, display_scatter_plots
 
 
 def _display_pair_plots(dataset_df: pd.DataFrame):

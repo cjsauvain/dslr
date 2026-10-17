@@ -1,7 +1,7 @@
 import pandas as pd
 
-from visualization import display_scatter_plots
 from src.parsing import parse_command_line
+from src.visualization import display_scatter_plots
 
 
 def scatter_plot():
